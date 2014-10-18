@@ -40,6 +40,9 @@
 
 #define __GCDWEBSERVER_LOGGING_FACILITY_XLFACILITY__
 
+#undef XLOG_TAG
+#define XLOG_TAG @"gcdnetworking.internal"
+
 #import "XLFacilityMacros.h"
 
 #define GN_LOG_DEBUG(...) XLOG_DEBUG(__VA_ARGS__)
