@@ -25,10 +25,31 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
+#import "GCDNetworking.h"
+
+@interface Connection : GCDTCPServerConnection
+@end
+
+@implementation Connection
+
+- (void)didOpen {
+  [super didOpen];
+  
+  NSString* welcome = @"Hello World!\n";
+  [self writeDataAsynchronously:[welcome dataUsingEncoding:NSUTF8StringEncoding] completion:^(BOOL success) {
+    [self close];
+  }];
+}
+
+@end
 
 int main(int argc, const char* argv[]) {
   @autoreleasepool {
+    GCDTCPServer* server = [[GCDTCPServer alloc] initWithConnectionClass:[Connection class] port:2323];
+    if (![server start]) {
+      abort();
+    }
+    
     CFRunLoopRun();
   }
   return 0;

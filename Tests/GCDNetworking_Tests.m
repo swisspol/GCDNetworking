@@ -30,10 +30,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "GCDTCPConnection.h"
-#import "GCDTCPPeer.h"
-#import "GCDTCPClient.h"
-#import "GCDTCPServer.h"
+#import "GCDNetworking.h"
 
 typedef void (^TCPServerConnectionBlock)(GCDTCPPeerConnection* connection);
 

@@ -23,9 +23,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		E22E917C19F2EEBE0043457E /* GCDPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = E22E917B19F2EEBE0043457E /* GCDPrivate.m */; };
-		E22E917D19F2EEBE0043457E /* GCDPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = E22E917B19F2EEBE0043457E /* GCDPrivate.m */; };
-		E22E917E19F2EEBE0043457E /* GCDPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = E22E917B19F2EEBE0043457E /* GCDPrivate.m */; };
+		E22E917C19F2EEBE0043457E /* GCDNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = E22E917B19F2EEBE0043457E /* GCDNetworking.m */; };
+		E22E917D19F2EEBE0043457E /* GCDNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = E22E917B19F2EEBE0043457E /* GCDNetworking.m */; };
+		E22E917E19F2EEBE0043457E /* GCDNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = E22E917B19F2EEBE0043457E /* GCDNetworking.m */; };
 		E26ABC2C19EC9F9A00654D9F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E26ABC2B19EC9F9A00654D9F /* main.m */; };
 		E280BF1419E9FF5000D85595 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E280BF1319E9FF5000D85595 /* CFNetwork.framework */; };
 		E280BF1619E9FF5500D85595 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E280BF1519E9FF5500D85595 /* CFNetwork.framework */; };
@@ -74,7 +74,8 @@
 
 /* Begin PBXFileReference section */
 		E22E917A19F2EBD40043457E /* GCDPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDPrivate.h; sourceTree = "<group>"; };
-		E22E917B19F2EEBE0043457E /* GCDPrivate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDPrivate.m; sourceTree = "<group>"; };
+		E22E917B19F2EEBE0043457E /* GCDNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDNetworking.m; sourceTree = "<group>"; };
+		E22E917F19F2F0850043457E /* GCDNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDNetworking.h; sourceTree = "<group>"; };
 		E26ABC2B19EC9F9A00654D9F /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E26DC16719E8494700C68DDC /* GCDNetworking */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GCDNetworking; sourceTree = BUILT_PRODUCTS_DIR; };
 		E280BF0E19E9F3DF00D85595 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -172,8 +173,9 @@
 		E2812BB019F2E9780046DDC1 /* GCDNetworking */ = {
 			isa = PBXGroup;
 			children = (
+				E22E917F19F2F0850043457E /* GCDNetworking.h */,
+				E22E917B19F2EEBE0043457E /* GCDNetworking.m */,
 				E22E917A19F2EBD40043457E /* GCDPrivate.h */,
-				E22E917B19F2EEBE0043457E /* GCDPrivate.m */,
 				E2812BB119F2E9780046DDC1 /* GCDTCPClient.h */,
 				E2812BB219F2E9780046DDC1 /* GCDTCPClient.m */,
 				E2812BB319F2E9780046DDC1 /* GCDTCPConnection.h */,
@@ -326,7 +328,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E22E917C19F2EEBE0043457E /* GCDPrivate.m in Sources */,
+				E22E917C19F2EEBE0043457E /* GCDNetworking.m in Sources */,
 				E2812BB919F2E9780046DDC1 /* GCDTCPClient.m in Sources */,
 				E2812BC119F2E9780046DDC1 /* GCDTCPPeer.m in Sources */,
 				E26ABC2C19EC9F9A00654D9F /* main.m in Sources */,
@@ -339,7 +341,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E22E917E19F2EEBE0043457E /* GCDPrivate.m in Sources */,
+				E22E917E19F2EEBE0043457E /* GCDNetworking.m in Sources */,
 				E2812BBC19F2E9780046DDC1 /* GCDTCPClient.m in Sources */,
 				E2812BC419F2E9780046DDC1 /* GCDTCPPeer.m in Sources */,
 				E298C47A19ED866100C76821 /* GCDNetworking_Tests.m in Sources */,
@@ -355,7 +357,7 @@
 				E2812BBA19F2E9780046DDC1 /* GCDTCPClient.m in Sources */,
 				E2812BC219F2E9780046DDC1 /* GCDTCPPeer.m in Sources */,
 				E2B3CF1D19E91825003ED065 /* main.m in Sources */,
-				E22E917D19F2EEBE0043457E /* GCDPrivate.m in Sources */,
+				E22E917D19F2EEBE0043457E /* GCDNetworking.m in Sources */,
 				E2B3CF1B19E91825003ED065 /* AppDelegate.m in Sources */,
 				E2812BC619F2E9780046DDC1 /* GCDTCPServer.m in Sources */,
 				E2812BBE19F2E9780046DDC1 /* GCDTCPConnection.m in Sources */,
@@ -401,8 +403,6 @@
 					"-Wno-direct-ivar-access",
 					"-Wno-objc-missing-property-synthesis",
 					"-Wno-implicit-retain-self",
-					"-Wno-switch-enum",
-					"-Wno-assign-enum",
 					"-Wno-documentation-unknown-command",
 					"-Wno-gnu-statement-expression",
 				);

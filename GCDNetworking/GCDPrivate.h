@@ -29,10 +29,7 @@
  *  All GCDNetworking headers.
  */
 
-#import "GCDTCPConnection.h"
-#import "GCDTCPPeer.h"
-#import "GCDTCPClient.h"
-#import "GCDTCPServer.h"
+#import "GCDNetworking.h"
 
 /**
  *  Automatically detect if XLFacility is available and if so use it as a

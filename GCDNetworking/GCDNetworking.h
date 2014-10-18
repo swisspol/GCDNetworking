@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2014, Pierre-Olivier Latour
+ Copyright (c) 2012-2014, Pierre-Olivier Latour
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -25,39 +25,7 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "AppDelegate.h"
-#import "GCDNetworking.h"
-
-@interface Connection : GCDTCPServerConnection
-@end
-
-@implementation Connection
-
-- (void)didOpen {
-  [super didOpen];
-  
-  NSString* welcome = @"Hello World!\n";
-  [self writeDataAsynchronously:[welcome dataUsingEncoding:NSUTF8StringEncoding] completion:^(BOOL success) {
-    [self close];
-  }];
-}
-
-@end
-
-@implementation AppDelegate
-
-- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
-  _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  _window.backgroundColor = [UIColor whiteColor];
-  _window.rootViewController = [[UIViewController alloc] init];
-  _window.rootViewController.view = [[UIView alloc] init];
-  [_window makeKeyAndVisible];
-  
-  GCDTCPServer* server = [[GCDTCPServer alloc] initWithConnectionClass:[Connection class] port:2323];
-  if (![server start]) {
-    abort();
-  }
-  
-  return YES;
-}
-@end
+#import "GCDTCPConnection.h"
+#import "GCDTCPPeer.h"
+#import "GCDTCPClient.h"
+#import "GCDTCPServer.h"
