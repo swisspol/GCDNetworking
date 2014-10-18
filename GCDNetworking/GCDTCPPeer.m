@@ -131,6 +131,7 @@
 #endif
   
   _running = YES;
+  GN_LOG_DEBUG(@"%@ started", [self class]);
   return YES;
 }
 
@@ -170,6 +171,7 @@
   dispatch_group_wait(_syncGroup, DISPATCH_TIME_FOREVER);  // Wait until all connections are closed
   
   _running = NO;
+  GN_LOG_DEBUG(@"%@ stopped", [self class]);
 }
 
 @end
