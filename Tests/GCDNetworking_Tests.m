@@ -62,7 +62,7 @@ typedef void (^TCPServerConnectionBlock)(GCDTCPPeerConnection* connection);
 
 @implementation GCDNetworking_Tests
 
-- (void)testTCP {
+- (void)testReading {
   __block GCDTCPPeerConnection* inConnection = nil;
   TCPServer* server = [[TCPServer alloc] initWithPort:4444 connectionBlock:^(GCDTCPPeerConnection* connection) {
     inConnection = connection;
@@ -78,8 +78,42 @@ typedef void (^TCPServerConnectionBlock)(GCDTCPPeerConnection* connection);
   GCDTCPClientConnection* outConnection = client.connection;
   XCTAssertNotNil(outConnection);
   
-  NSData* data1 = [outConnection readData:1024 withTimeout:3.0];
+  NSData* data1 = [inConnection readDataWithTimeout:3.0];
   XCTAssertNil(data1);
+  
+  XCTestExpectation* expectation = [self expectationWithDescription:nil];
+  [outConnection writeDataAsynchronously:[@"Hello World!\n" dataUsingEncoding:NSUTF8StringEncoding] completion:^(BOOL success) {
+    XCTAssertTrue(success);
+    [expectation fulfill];
+  }];
+  [self waitForExpectationsWithTimeout:10.0 handler:NULL];
+  NSData* data2 = [inConnection readDataWithTimeout:3.0];
+  XCTAssertNotNil(data2);
+  NSString* string = [[NSString alloc] initWithData:data2 encoding:NSUTF8StringEncoding];
+  XCTAssertEqualObjects(string, @"Hello World!\n");
+  
+  [outConnection close];
+  [inConnection close];
+  
+  [client stop];
+  [server stop];
+}
+
+- (void)testWriting {
+  __block GCDTCPPeerConnection* inConnection = nil;
+  TCPServer* server = [[TCPServer alloc] initWithPort:4444 connectionBlock:^(GCDTCPPeerConnection* connection) {
+    inConnection = connection;
+  }];
+  XCTAssertTrue([server start]);
+  
+  GCDTCPClient* client = [[GCDTCPClient alloc] initWithConnectionClass:[GCDTCPClientConnection class] host:@"localhost" port:4444];
+  XCTAssertTrue([client start]);
+  
+  sleep(1);
+  
+  XCTAssertNotNil(inConnection);
+  GCDTCPClientConnection* outConnection = client.connection;
+  XCTAssertNotNil(outConnection);
   
   XCTestExpectation* expectation = [self expectationWithDescription:nil];
   [inConnection readDataAsynchronously:^(NSData* data) {

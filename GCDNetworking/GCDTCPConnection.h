@@ -92,7 +92,7 @@ typedef NS_ENUM(int, GCDTCPConnectionState) {
  *
  *  Pass 0 as "timeout" to block indefinitely.
  */
-- (NSData*)readData:(NSUInteger)maxLength withTimeout:(NSTimeInterval)timeout;
+- (NSData*)readDataWithTimeout:(NSTimeInterval)timeout;
 
 /**
  *  Reads data asynchronously from the socket.

@@ -34,6 +34,8 @@
 
 #import "GCDPrivate.h"
 
+#define kReadBufferSize (64 * 1024)  // Max IP packet size
+
 typedef union {
   struct sockaddr addr;
   struct sockaddr_in addr4;
@@ -247,7 +249,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
   }
 }
 
-- (NSData*)readData:(NSUInteger)maxLength withTimeout:(NSTimeInterval)timeout {
+- (NSData*)readDataWithTimeout:(NSTimeInterval)timeout {
   __block NSMutableData* data = nil;
   dispatch_sync(_lockQueue, ^{
     if (_state == kXLTCPConnectionState_Opened) {
@@ -256,7 +258,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
       tv.tv_usec = fmod(timeout * 1000000.0, 1.0);
       [self _setSocketOption:SO_RCVTIMEO valuePtr:&tv valueLength:sizeof(tv)];
       
-      data = [[NSMutableData alloc] initWithLength:maxLength];
+      data = [[NSMutableData alloc] initWithLength:kReadBufferSize];
       ssize_t len = recv(_socket, data.mutableBytes, data.length, 0);
       if (len >= 0) {
         data.length = len;
