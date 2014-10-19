@@ -6,7 +6,7 @@ Overview
 [![Platform](http://cocoapod-badges.herokuapp.com/p/GCDNetworking/badge.png)](https://github.com/swisspol/GCDNetworking)
 [![License](http://img.shields.io/cocoapods/l/GCDNetworking.svg)](LICENSE)
 
-GCDNetworking is a networking framework based on GCD.
+GCDNetworking is a networking framework based on GCD available under a friendly [New BSD License](LICENSE).
 
 Requirements:
 * OS X 10.7 or later (x86_64)
