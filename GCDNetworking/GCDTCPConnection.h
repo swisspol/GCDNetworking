@@ -173,4 +173,14 @@ typedef NS_ENUM(int, GCDTCPConnectionState) {
  */
 - (BOOL)writeCString:(const char*)string withTimeout:(NSTimeInterval)timeout;
 
+/**
+ *  Writes string synchronously to the socket using UTF8 encoding.
+ */
+- (BOOL)writeString:(NSString*)string withTimeout:(NSTimeInterval)timeout;
+
+/**
+ *  Writes string asynchronously to the socket using UTF8 encoding.
+ */
+- (void)writeStringAsynchronously:(NSString*)string completion:(void (^)(BOOL success))completion;
+
 @end

@@ -438,4 +438,12 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
   return [self _writeBytes:string length:strlen(string) withTimeout:timeout];
 }
 
+- (BOOL)writeString:(NSString*)string withTimeout:(NSTimeInterval)timeout {
+  return [self writeData:[string dataUsingEncoding:NSUTF8StringEncoding] withTimeout:timeout];
+}
+
+- (void)writeStringAsynchronously:(NSString*)string completion:(void (^)(BOOL success))completion {
+  [self writeDataAsynchronously:[string dataUsingEncoding:NSUTF8StringEncoding] completion:completion];
+}
+
 @end
