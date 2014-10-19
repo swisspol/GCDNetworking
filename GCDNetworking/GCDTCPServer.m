@@ -32,7 +32,7 @@
 #import <net/if.h>
 #import <netdb.h>
 
-#import "GCDPrivate.h"
+#import "GCDNetworkingPrivate.h"
 
 #define kMaxPendingConnections 4
 

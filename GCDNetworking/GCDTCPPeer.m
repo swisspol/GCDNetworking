@@ -34,7 +34,7 @@
 #import <UIKit/UIKit.h>
 #endif
 
-#import "GCDPrivate.h"
+#import "GCDNetworkingPrivate.h"
 
 @interface GCDTCPPeerConnection ()
 @property(nonatomic, assign) GCDTCPPeer* peer;

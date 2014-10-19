@@ -25,7 +25,7 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "GCDPrivate.h"
+#import "GCDNetworkingPrivate.h"
 
 #if defined(__GCDNETWORKING_LOGGING_FACILITY_BUILTIN__)
 #if DEBUG

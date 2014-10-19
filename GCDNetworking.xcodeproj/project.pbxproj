@@ -73,7 +73,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E22E917A19F2EBD40043457E /* GCDPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDPrivate.h; sourceTree = "<group>"; };
+		E22E917A19F2EBD40043457E /* GCDNetworkingPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDNetworkingPrivate.h; sourceTree = "<group>"; };
 		E22E917B19F2EEBE0043457E /* GCDNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDNetworking.m; sourceTree = "<group>"; };
 		E22E917F19F2F0850043457E /* GCDNetworking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDNetworking.h; sourceTree = "<group>"; };
 		E26ABC2B19EC9F9A00654D9F /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -175,7 +175,7 @@
 			children = (
 				E22E917F19F2F0850043457E /* GCDNetworking.h */,
 				E22E917B19F2EEBE0043457E /* GCDNetworking.m */,
-				E22E917A19F2EBD40043457E /* GCDPrivate.h */,
+				E22E917A19F2EBD40043457E /* GCDNetworkingPrivate.h */,
 				E2812BB119F2E9780046DDC1 /* GCDTCPClient.h */,
 				E2812BB219F2E9780046DDC1 /* GCDTCPClient.m */,
 				E2812BB319F2E9780046DDC1 /* GCDTCPConnection.h */,

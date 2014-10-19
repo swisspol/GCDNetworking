@@ -29,7 +29,7 @@
 #error GCDNetworking requires ARC
 #endif
 
-#import "GCDPrivate.h"
+#import "GCDNetworkingPrivate.h"
 
 @implementation GCDTCPClientConnection
 @end

@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'GCDNetworking/*.{h,m}'
-  s.private_header_files = "GCDNetworking/GCDPrivate.h"
+  s.private_header_files = "GCDNetworking/GCDNetworkingPrivate.h"
   s.requires_arc = true
   s.ios.frameworks = 'CFNetwork'
 
