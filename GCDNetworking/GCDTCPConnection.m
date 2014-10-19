@@ -315,7 +315,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
   }];
 }
 
-- (BOOL)writeData:(NSData*)data withTimeout:(NSTimeInterval)timeout {
+- (BOOL)_writeBytes:(const void*)bytes length:(size_t)length withTimeout:(NSTimeInterval)timeout {
   __block BOOL result = NO;
   dispatch_sync(_lockQueue, ^{
     if (_state == kXLTCPConnectionState_Opened) {
@@ -324,8 +324,8 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
       tv.tv_usec = fmod(timeout * 1000000.0, 1.0);
       [self _setSocketOption:SO_SNDTIMEO valuePtr:&tv valueLength:sizeof(tv)];
       
-      ssize_t len = send(_socket, data.bytes, data.length, 0);
-      if (len == (ssize_t)data.length) {
+      ssize_t len = send(_socket, bytes, length, 0);
+      if (len == (ssize_t)length) {
         result = YES;
       } else if (errno != EAGAIN) {
         GN_LOG_ERROR(@"Failed writing synchronously to socket: %s", strerror(errno));
@@ -333,6 +333,10 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
     }
   });
   return result;
+}
+
+- (BOOL)writeData:(NSData*)data withTimeout:(NSTimeInterval)timeout {
+  return [self _writeBytes:data.bytes length:data.length withTimeout:timeout];
 }
 
 - (void)_writeBufferAsynchronously:(dispatch_data_t)buffer completion:(void (^)(BOOL success))completion {
@@ -424,6 +428,14 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
 
 - (NSString*)remoteIPAddress {
   return _IPAddressFromAddressData(_remoteAddressData.bytes);
+}
+
+- (BOOL)writeBuffer:(const void*)buffer length:(NSUInteger)length withTimeout:(NSTimeInterval)timeout {
+  return [self _writeBytes:buffer length:length withTimeout:timeout];
+}
+
+- (BOOL)writeCString:(const char*)string withTimeout:(NSTimeInterval)timeout {
+  return [self _writeBytes:string length:strlen(string) withTimeout:timeout];
 }
 
 @end

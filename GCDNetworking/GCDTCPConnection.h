@@ -163,4 +163,14 @@ typedef NS_ENUM(int, GCDTCPConnectionState) {
  */
 @property(nonatomic, readonly) NSString* remoteIPAddress;
 
+/**
+ *  Writes a buffer synchronously to the socket.
+ */
+- (BOOL)writeBuffer:(const void*)buffer length:(NSUInteger)length withTimeout:(NSTimeInterval)timeout;
+
+/**
+ *  Writes a NULL terminated string synchronously to the socket.
+ */
+- (BOOL)writeCString:(const char*)string withTimeout:(NSTimeInterval)timeout;
+
 @end
