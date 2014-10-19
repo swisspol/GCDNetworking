@@ -27,13 +27,13 @@
 
 #import "GCDPrivate.h"
 
-#if defined(__GCDWEBSERVER_LOGGING_FACILITY_BUILTIN__)
+#if defined(__GCDNETWORKING_LOGGING_FACILITY_BUILTIN__)
 #if DEBUG
 GCDNetworkingLoggingLevel GCDNetworkingLogLevel = kGCDNetworkingLoggingLevel_Debug;
 #else
 GCDNetworkingLoggingLevel GCDNetworkingLogLevel = kGCDNetworkingLoggingLevel_Info;
 #endif
-#elif defined(__GCDWEBSERVER_LOGGING_FACILITY_COCOALUMBERJACK__)
+#elif defined(__GCDNETWORKING_LOGGING_FACILITY_COCOALUMBERJACK__)
 #if DEBUG
 int GCDNetworkingLogLevel = LOG_LEVEL_DEBUG;
 #else
@@ -41,7 +41,7 @@ int GCDNetworkingLogLevel = LOG_LEVEL_INFO;
 #endif
 #endif
 
-#ifdef __GCDWEBSERVER_LOGGING_FACILITY_BUILTIN__
+#ifdef __GCDNETWORKING_LOGGING_FACILITY_BUILTIN__
 
 void GCDNetworkingLogMessage(GCDNetworkingLoggingLevel level, NSString* format, ...) {
   static const char* levelNames[] = {"DEBUG", "VERBOSE", "INFO", "WARNING", "ERROR", "EXCEPTION"};

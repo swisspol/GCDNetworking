@@ -38,7 +38,7 @@
 
 #if defined(__has_include) && __has_include("XLFacilityMacros.h")
 
-#define __GCDWEBSERVER_LOGGING_FACILITY_XLFACILITY__
+#define __GCDNETWORKING_LOGGING_FACILITY_XLFACILITY__
 
 #undef XLOG_TAG
 #define XLOG_TAG @"gcdnetworking.internal"
@@ -64,7 +64,7 @@
 
 #import "DDLogMacros.h"
 
-#define __GCDWEBSERVER_LOGGING_FACILITY_COCOALUMBERJACK__
+#define __GCDNETWORKING_LOGGING_FACILITY_COCOALUMBERJACK__
 
 #undef LOG_LEVEL_DEF
 #define LOG_LEVEL_DEF GCDNetworkingLogLevel
@@ -81,11 +81,11 @@ extern int GCDNetworkingLogLevel;
  *  Check if a custom logging facility should be used instead.
  */
 
-#elif defined(__GCDWEBSERVER_LOGGING_HEADER__)
+#elif defined(__GCDNETWORKING_LOGGING_HEADER__)
 
-#define __GCDWEBSERVER_LOGGING_FACILITY_CUSTOM__
+#define __GCDNETWORKING_LOGGING_FACILITY_CUSTOM__
 
-#import __GCDWEBSERVER_LOGGING_HEADER__
+#import __GCDNETWORKING_LOGGING_HEADER__
 
 /**
  *  If all of the above fail, then use GCDNetworking built-in
@@ -94,7 +94,7 @@ extern int GCDNetworkingLogLevel;
 
 #else
 
-#define __GCDWEBSERVER_LOGGING_FACILITY_BUILTIN__
+#define __GCDNETWORKING_LOGGING_FACILITY_BUILTIN__
 
 typedef NS_ENUM(int, GCDNetworkingLoggingLevel) {
   kGCDNetworkingLoggingLevel_Debug = 0,
