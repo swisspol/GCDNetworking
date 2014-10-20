@@ -147,7 +147,7 @@ extern void GCDNetworkingLogMessage(GCDNetworkingLoggingLevel level, NSString* f
 #endif
 
 /**
- *  XLFacility internal constants and APIs.
+ *  GCDNetworking internal constants and APIs.
  */
 
 #define GN_QUEUE_LABEL object_getClassName(self)
