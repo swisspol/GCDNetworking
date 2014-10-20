@@ -49,7 +49,7 @@ static NSString* _IPAddressFromAddressData(const struct sockaddr* address) {
     if (getnameinfo(address, address->sa_len, hostBuffer, sizeof(hostBuffer), NULL, 0, NI_NUMERICHOST | NI_NOFQDN) >= 0) {
       string = [NSString stringWithUTF8String:hostBuffer];
     } else {
-      GN_LOG_ERROR(@"Failed converting IP address data to string: %s", strerror(errno));
+      _LOG_ERROR(@"Failed converting IP address data to string: %s", strerror(errno));
     }
   }
   return string;
@@ -64,7 +64,7 @@ static NSUInteger _PortFromAddressData(const struct sockaddr* address) {
     case AF_INET: return ntohs(((const struct sockaddr_in*)address)->sin_port);
     case AF_INET6: return ntohs(((const struct sockaddr_in6*)address)->sin6_port);
   }
-  GN_DNOT_REACHED();
+  _LOG_DEBUG_UNREACHABLE();
   return 0;
 }
 
@@ -86,7 +86,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
     BOOL success = NO;
     fcntl(connectedSocket, F_SETFL, O_NONBLOCK);
     
-    GN_LOG_DEBUG(@"Connecting %s socket to \"%@:%i\" (%@)...", isIPv6 ? "IPv6" : "IPv4", hostname, (int)port, _IPAddressFromAddressData(addr));
+    _LOG_DEBUG(@"Connecting %s socket to \"%@:%i\" (%@)...", isIPv6 ? "IPv6" : "IPv4", hostname, (int)port, _IPAddressFromAddressData(addr));
     int result = connect(connectedSocket, addr, len);
     if ((result == -1) && (errno == EINPROGRESS)) {
       fd_set fdset;
@@ -105,17 +105,17 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
           if (error == 0) {
             success = YES;
           } else {
-            GN_LOG_ERROR(@"Failed connecting %s socket to \"%@:%i\" (%@): %s", isIPv6 ? "IPv6" : "IPv4", hostname, (int)port, _IPAddressFromAddressData(addr), strerror(error));
+            _LOG_ERROR(@"Failed connecting %s socket to \"%@:%i\" (%@): %s", isIPv6 ? "IPv6" : "IPv4", hostname, (int)port, _IPAddressFromAddressData(addr), strerror(error));
           }
         } else {
-          GN_LOG_ERROR(@"Failed retrieving %s socket option: %s", isIPv6 ? "IPv6" : "IPv4", strerror(errno));
+          _LOG_ERROR(@"Failed retrieving %s socket option: %s", isIPv6 ? "IPv6" : "IPv4", strerror(errno));
         }
         
       } else if (result == 0) {
-        GN_LOG_ERROR(@"Timed out connecting %s socket to \"%@:%i\" (%@)", isIPv6 ? "IPv6" : "IPv4", hostname, (int)port, _IPAddressFromAddressData(addr));
+        _LOG_ERROR(@"Timed out connecting %s socket to \"%@:%i\" (%@)", isIPv6 ? "IPv6" : "IPv4", hostname, (int)port, _IPAddressFromAddressData(addr));
       }
     } else {
-      GN_LOG_ERROR(@"Failed connecting %s socket to \"%@:%i\" (%@): %s", isIPv6 ? "IPv6" : "IPv4", hostname, (int)port, _IPAddressFromAddressData(addr), strerror(errno));
+      _LOG_ERROR(@"Failed connecting %s socket to \"%@:%i\" (%@): %s", isIPv6 ? "IPv6" : "IPv4", hostname, (int)port, _IPAddressFromAddressData(addr), strerror(errno));
     }
     
     if (success) {
@@ -125,7 +125,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
       connectedSocket = -1;
     }
   } else {
-    GN_LOG_ERROR(@"Failed creating %s socket: %s", isIPv6 ? "IPv6" : "IPv4", strerror(errno));
+    _LOG_ERROR(@"Failed creating %s socket: %s", isIPv6 ? "IPv6" : "IPv4", strerror(errno));
   }
   return connectedSocket;
 }
@@ -155,7 +155,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
             if (connection) {
               break;
             } else {
-              GN_LOG_ERROR(@"Failed creating %@ instance with connected socket", NSStringFromClass([self class]));
+              _LOG_ERROR(@"Failed creating %@ instance with connected socket", NSStringFromClass([self class]));
               close(socket);
             }
           }
@@ -163,7 +163,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
         }
       }
     } else {
-      GN_LOG_ERROR(@"Failed resolving host \"%@\": (%i, %i)", hostname, (int)error.domain, (int)error.error);
+      _LOG_ERROR(@"Failed resolving host \"%@\": (%i, %i)", hostname, (int)error.domain, (int)error.error);
     }
     CFRelease(host);
     
@@ -173,7 +173,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
 
 - (void)_setSocketOption:(int)option valuePtr:(const void*)valuePtr valueLength:(socklen_t)valueLength {
   if (setsockopt(_socket, SOL_SOCKET, option, valuePtr, valueLength)) {
-    GN_LOG_ERROR(@"Failed setting socket option: %s", strerror(errno));
+    _LOG_ERROR(@"Failed setting socket option: %s", strerror(errno));
   }
 }
 
@@ -187,7 +187,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
 }
 
 - (instancetype)initWithSocket:(int)socket {
-  GN_DCHECK(socket >= 0);
+  _LOG_DEBUG_CHECK(socket >= 0);
   if ((self = [super init])) {
     _lockQueue = dispatch_queue_create(GN_QUEUE_LABEL, DISPATCH_QUEUE_SERIAL);
     _state = kXLTCPConnectionState_Initialized;
@@ -201,7 +201,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
     if (getsockname(_socket, &localSockAddr, &localAddrLen) == 0) {
       _localAddressData = [[NSData alloc] initWithBytes:&localSockAddr length:localAddrLen];
     } else {
-      GN_LOG_ERROR(@"Failed retrieving local socket address: %s", strerror(errno));
+      _LOG_ERROR(@"Failed retrieving local socket address: %s", strerror(errno));
     }
     
     struct sockaddr remoteSockAddr;
@@ -209,7 +209,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
     if (getpeername(_socket, &remoteSockAddr, &remoteAddrLen) == 0) {
       _remoteAddressData = [[NSData alloc] initWithBytes:&remoteSockAddr length:remoteAddrLen];
     } else {
-      GN_LOG_ERROR(@"Failed retrieving remote socket address: %s", strerror(errno));
+      _LOG_ERROR(@"Failed retrieving remote socket address: %s", strerror(errno));
     }
   }
   return self;
@@ -264,7 +264,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
         data.length = len;
       } else {
         if (errno != EAGAIN) {
-          GN_LOG_ERROR(@"Failed reading synchronously from socket: %s", strerror(errno));
+          _LOG_ERROR(@"Failed reading synchronously from socket: %s", strerror(errno));
         }
         data = nil;
       }
@@ -280,7 +280,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
         @autoreleasepool {
           
           if (error) {
-            GN_LOG_ERROR(@"Failed reading asynchronously from socket: %s", strerror(error));
+            _LOG_ERROR(@"Failed reading asynchronously from socket: %s", strerror(error));
             if (completion) {
               completion(NULL);
             }
@@ -328,7 +328,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
       if (len == (ssize_t)length) {
         result = YES;
       } else if (errno != EAGAIN) {
-        GN_LOG_ERROR(@"Failed writing synchronously to socket: %s", strerror(errno));
+        _LOG_ERROR(@"Failed writing synchronously to socket: %s", strerror(errno));
       }
     }
   });
@@ -347,7 +347,7 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
           
           if (error) {
             if (error != EPIPE) {
-              GN_LOG_ERROR(@"Failed writing asynchronously to socket: %s", strerror(error));
+              _LOG_ERROR(@"Failed writing asynchronously to socket: %s", strerror(error));
             }
             if (completion) {
               completion(NO);
@@ -398,11 +398,11 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
 @implementation GCDTCPConnection (Subclassing)
 
 - (void)didOpen {
-  GN_LOG_DEBUG(@"%@ did open over %s from %@ (%i) to %@ (%i)", [self class], self.usingIPv6 ? "IPv6" : "IPv4", self.localIPAddress, (int)self.localPort, self.remoteIPAddress, (int)self.remotePort);
+  _LOG_DEBUG(@"%@ did open over %s from %@ (%i) to %@ (%i)", [self class], self.usingIPv6 ? "IPv6" : "IPv4", self.localIPAddress, (int)self.localPort, self.remoteIPAddress, (int)self.remotePort);
 }
 
 - (void)didClose {
-  GN_LOG_DEBUG(@"%@ did close over %s from %@ (%i) to %@ (%i)", [self class], self.usingIPv6 ? "IPv6" : "IPv4", self.localIPAddress, (int)self.localPort, self.remoteIPAddress, (int)self.remotePort);
+  _LOG_DEBUG(@"%@ did close over %s from %@ (%i) to %@ (%i)", [self class], self.usingIPv6 ? "IPv6" : "IPv4", self.localIPAddress, (int)self.localPort, self.remoteIPAddress, (int)self.remotePort);
 }
 
 @end

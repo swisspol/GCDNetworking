@@ -49,9 +49,9 @@
 }
 
 - (instancetype)initWithConnectionClass:(Class)connectionClass host:(NSString*)hostname port:(NSUInteger)port {
-  GN_DCHECK([connectionClass isSubclassOfClass:[GCDTCPClientConnection class]]);
-  GN_DCHECK(hostname);
-  GN_DCHECK(port > 0);
+  _LOG_DEBUG_CHECK([connectionClass isSubclassOfClass:[GCDTCPClientConnection class]]);
+  _LOG_DEBUG_CHECK(hostname);
+  _LOG_DEBUG_CHECK(port > 0);
   if ((self = [super initWithConnectionClass:connectionClass])) {
     _host = [hostname copy];
     _port = port;
@@ -67,7 +67,7 @@
 
 // Must be called inside lock queue
 - (void)_scheduleReconnection {
-  GN_LOG_DEBUG(@"%@ will attempt to reconnect to \"%@:%i\" in %.0f seconds", [self class], _host, (int)_port, _reconnectionDelay);
+  _LOG_DEBUG(@"%@ will attempt to reconnect to \"%@:%i\" in %.0f seconds", [self class], _host, (int)_port, _reconnectionDelay);
   dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(_reconnectionDelay * NSEC_PER_SEC)), GN_GLOBAL_DISPATCH_QUEUE, ^{
     dispatch_sync(self.lockQueue, ^{
       if (_reconnectionDelay > 0.0) {
@@ -79,7 +79,7 @@
 }
 
 - (void)_reconnect {
-  GN_LOG_DEBUG(@"%@ attempting to connect to \"%@:%i\"", [self class], _host, (int)_port);
+  _LOG_DEBUG(@"%@ attempting to connect to \"%@:%i\"", [self class], _host, (int)_port);
   _generation += 1;
   NSUInteger lastGeneration = _generation;
   [self.connectionClass connectAsynchronouslyToHost:_host port:_port timeout:_connectionTimeout completion:^(GCDTCPConnection* connection) {
@@ -93,7 +93,7 @@
         });
         
       } else {
-        GN_LOG_DEBUG(@"%@ ignoring stalled connection to \"%@:%i\"", [self class], _host, (int)_port);
+        _LOG_DEBUG(@"%@ ignoring stalled connection to \"%@:%i\"", [self class], _host, (int)_port);
         [connection close];
       }
     } else if (_automaticallyReconnects) {

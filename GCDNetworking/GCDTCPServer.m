@@ -50,7 +50,7 @@
 @implementation GCDTCPServer
 
 - (instancetype)initWithConnectionClass:(Class)connectionClass port:(NSUInteger)port {
-  GN_DCHECK([connectionClass isSubclassOfClass:[GCDTCPServerConnection class]]);
+  _LOG_DEBUG_CHECK([connectionClass isSubclassOfClass:[GCDTCPServerConnection class]]);
   if ((self = [super initWithConnectionClass:connectionClass])) {
     _port = port;
     
@@ -77,15 +77,15 @@
       if (listen(listeningSocket, kMaxPendingConnections) == 0) {
         return listeningSocket;
       } else {
-        GN_LOG_ERROR(@"Failed starting %s listening socket: %s", useIPv6 ? "IPv6" : "IPv4", strerror(errno));
+        _LOG_ERROR(@"Failed starting %s listening socket: %s", useIPv6 ? "IPv6" : "IPv4", strerror(errno));
         close(listeningSocket);
       }
     } else {
-      GN_LOG_ERROR(@"Failed binding %s listening socket: %s", useIPv6 ? "IPv6" : "IPv4", strerror(errno));
+      _LOG_ERROR(@"Failed binding %s listening socket: %s", useIPv6 ? "IPv6" : "IPv4", strerror(errno));
       close(listeningSocket);
     }
   } else {
-    GN_LOG_ERROR(@"Failed creating %s listening socket: %s", useIPv6 ? "IPv6" : "IPv4", strerror(errno));
+    _LOG_ERROR(@"Failed creating %s listening socket: %s", useIPv6 ? "IPv6" : "IPv4", strerror(errno));
   }
   return -1;
 }
@@ -108,11 +108,11 @@
         if (connection) {
           [self willOpenConnection:connection];
         } else {
-          GN_LOG_ERROR(@"Failed creating %@ instance", NSStringFromClass(self.connectionClass));
+          _LOG_ERROR(@"Failed creating %@ instance", NSStringFromClass(self.connectionClass));
           close(socket);
         }
       } else {
-        GN_LOG_ERROR(@"Failed accepting %s socket: %s", isIPv6 ? "IPv6" : "IPv4", strerror(errno));
+        _LOG_ERROR(@"Failed accepting %s socket: %s", isIPv6 ? "IPv6" : "IPv4", strerror(errno));
       }
       
     }

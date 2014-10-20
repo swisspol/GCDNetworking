@@ -71,7 +71,7 @@
 }
 
 - (instancetype)initWithConnectionClass:(Class)connectionClass {
-  GN_DCHECK([connectionClass isSubclassOfClass:[GCDTCPPeerConnection class]]);
+  _LOG_DEBUG_CHECK([connectionClass isSubclassOfClass:[GCDTCPPeerConnection class]]);
   if ((self = [super init])) {
     _connectionClass = connectionClass;
     
@@ -111,7 +111,7 @@
 }
 
 - (BOOL)start {
-  GN_DCHECK(!_running);
+  _LOG_DEBUG_CHECK(!_running);
   
   if (![self willStart]) {
     return NO;
@@ -131,7 +131,7 @@
 #endif
   
   _running = YES;
-  GN_LOG_DEBUG(@"%@ started", [self class]);
+  _LOG_DEBUG(@"%@ started", [self class]);
   return YES;
 }
 
@@ -153,7 +153,7 @@
 #endif
 
 - (void)stop {
-  GN_DCHECK(_running);
+  _LOG_DEBUG_CHECK(_running);
   
 #if TARGET_OS_IPHONE
   if (_backgroundTask != UIBackgroundTaskInvalid) {
@@ -171,7 +171,7 @@
   dispatch_group_wait(_syncGroup, DISPATCH_TIME_FOREVER);  // Wait until all connections are closed
   
   _running = NO;
-  GN_LOG_DEBUG(@"%@ stopped", [self class]);
+  _LOG_DEBUG(@"%@ stopped", [self class]);
 }
 
 @end
@@ -191,7 +191,7 @@
 }
 
 - (void)willOpenConnection:(GCDTCPPeerConnection*)connection {
-  GN_LOG_DEBUG(@"%@ did connect to peer at \"%@\" (%i)", [self class], connection.remoteIPAddress, (int)connection.remotePort);
+  _LOG_DEBUG(@"%@ did connect to peer at \"%@\" (%i)", [self class], connection.remoteIPAddress, (int)connection.remotePort);
   connection.peer = self;
   dispatch_sync(_lockQueue, ^{
     dispatch_group_enter(_syncGroup);
@@ -207,7 +207,7 @@
       dispatch_group_leave(_syncGroup);
     }
   });
-  GN_LOG_DEBUG(@"%@ did disconnect from peer at \"%@\" (%i)", [self class], connection.remoteIPAddress, (int)connection.remotePort);
+  _LOG_DEBUG(@"%@ did disconnect from peer at \"%@\" (%i)", [self class], connection.remoteIPAddress, (int)connection.remotePort);
 }
 
 @end

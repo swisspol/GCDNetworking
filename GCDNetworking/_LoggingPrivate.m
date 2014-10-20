@@ -25,25 +25,25 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "GCDNetworkingPrivate.h"
+#import "_LoggingPrivate.h"
 
-#if defined(__GCDNETWORKING_LOGGING_FACILITY_BUILTIN__)
+#if defined(__LOGGING_FACILITY_BUILTIN__)
 #if DEBUG
-GCDNetworkingLoggingLevel GCDNetworkingLogLevel = kGCDNetworkingLoggingLevel_Debug;
+int _LoggingMinLevel = _LOG_LEVEL_DEBUG;
 #else
-GCDNetworkingLoggingLevel GCDNetworkingLogLevel = kGCDNetworkingLoggingLevel_Info;
+int _LoggingMinLevel = _LOG_LEVEL_INFO;
 #endif
-#elif defined(__GCDNETWORKING_LOGGING_FACILITY_COCOALUMBERJACK__)
+#elif defined(__LOGGING_FACILITY_COCOALUMBERJACK__)
 #if DEBUG
-int GCDNetworkingLogLevel = LOG_LEVEL_DEBUG;
+int _LoggingMinLevel = LOG_LEVEL_DEBUG;
 #else
-int GCDNetworkingLogLevel = LOG_LEVEL_INFO;
+int _LoggingMinLevel = LOG_LEVEL_INFO;
 #endif
 #endif
 
-#ifdef __GCDNETWORKING_LOGGING_FACILITY_BUILTIN__
+#ifdef __LOGGING_FACILITY_BUILTIN__
 
-void GCDNetworkingLogMessage(GCDNetworkingLoggingLevel level, NSString* format, ...) {
+void _LogMessage(int level, NSString* format, ...) {
   static const char* levelNames[] = {"DEBUG", "VERBOSE", "INFO", "WARNING", "ERROR", "EXCEPTION"};
   static int enableLogging = -1;
   if (enableLogging < 0) {
