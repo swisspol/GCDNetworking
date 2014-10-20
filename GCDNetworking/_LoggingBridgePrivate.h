@@ -28,16 +28,12 @@
 #import <Foundation/Foundation.h>
 
 /**
- *  Automatically detect if XLFacility is available and if so use it as a
- *  logging facility.
+ *  Automatically detect if XLFacility is available.
  */
 
 #if defined(__has_include) && __has_include("XLFacilityMacros.h")
 
-#define __LOGGING_FACILITY_XLFACILITY__
-
-#undef XLOG_TAG
-#define XLOG_TAG @"gcdnetworking.internal"
+#define __LOGGING_BRIDGE_XLFACILITY__
 
 #import "XLFacilityMacros.h"
 
@@ -52,15 +48,14 @@
 #define _LOG_DEBUG_UNREACHABLE() XLOG_DEBUG_UNREACHABLE()
 
 /**
- *  Automatically detect if CocoaLumberJack is available and if so use
- *  it as a logging facility.
+ *  Automatically detect if CocoaLumberJack is available.
  */
 
 #elif defined(__has_include) && __has_include("DDLogMacros.h")
 
 #import "DDLogMacros.h"
 
-#define __LOGGING_FACILITY_COCOALUMBERJACK__
+#define __LOGGING_BRIDGE_COCOALUMBERJACK__
 
 #undef LOG_LEVEL_DEF
 #define LOG_LEVEL_DEF _LoggingMinLevel
@@ -74,68 +69,67 @@ extern int _LoggingMinLevel;
 #define _LOG_EXCEPTION(__EXCEPTION__) DDLogError(@"%@", __EXCEPTION__)
 
 /**
- *  Check if a custom logging facility should be used instead.
+ *  Check if a custom logging header should be used instead.
  */
 
-#elif defined(__GCDNETWORKING_LOGGING_HEADER__)
+#elif defined(__LOGGING_CUSTOM_HEADER__)
 
-#define __LOGGING_FACILITY_CUSTOM__
+#define __LOGGING_BRIDGE_CUSTOM__
 
-#import __GCDNETWORKING_LOGGING_HEADER__
+#import __LOGGING_CUSTOM_HEADER__
 
 /**
- *  If all of the above fail, then use GCDNetworking built-in
- *  logging facility.
+ *  If all of the above fail, fall back to NSLog().
  */
 
 #else
 
-#define __LOGGING_FACILITY_BUILTIN__
-
-#define _LOG_LEVEL_DEBUG 0
-#define _LOG_LEVEL_VERBOSE 1
-#define _LOG_LEVEL_INFO 2
-#define _LOG_LEVEL_WARNING 3
-#define _LOG_LEVEL_ERROR 4
-#define _LOG_LEVEL_EXCEPTION 5
-
-extern int _LoggingMinLevel;
-extern void _LogMessage(int level, NSString* format, ...) NS_FORMAT_FUNCTION(2, 3);
+#define __LOGGING_BRIDGE_BUILTIN__
 
 #if DEBUG
-#define _LOG_DEBUG(...) do { if (_LoggingMinLevel <= _LOG_LEVEL_DEBUG) _LogMessage(_LOG_LEVEL_DEBUG, __VA_ARGS__); } while (0)
+#define _LOG_DEBUG(...) NSLog(__VA_ARGS__)
+#define _LOG_VERBOSE(...) NSLog(__VA_ARGS__)
+#define _LOG_INFO(...) NSLog(__VA_ARGS__)
 #else
 #define _LOG_DEBUG(...)
+#define _LOG_VERBOSE(...)
+#define _LOG_INFO(...)
 #endif
-#define _LOG_VERBOSE(...) do { if (_LoggingMinLevel <= _LOG_LEVEL_VERBOSE) _LogMessage(_LOG_LEVEL_VERBOSE, __VA_ARGS__); } while (0)
-#define _LOG_INFO(...) do { if (_LoggingMinLevel <= _LOG_LEVEL_INFO) _LogMessage(_LOG_LEVEL_INFO, __VA_ARGS__); } while (0)
-#define _LOG_WARNING(...) do { if (_LoggingMinLevel <= _LOG_LEVEL_WARNING) _LogMessage(_LOG_LEVEL_WARNING, __VA_ARGS__); } while (0)
-#define _LOG_ERROR(...) do { if (_LoggingMinLevel <= _LOG_LEVEL_ERROR) _LogMessage(_LOG_LEVEL_ERROR, __VA_ARGS__); } while (0)
-#define _LOG_EXCEPTION(__EXCEPTION__) do { if (_LoggingMinLevel <= _LOG_LEVEL_EXCEPTION) _LogMessage(_LOG_LEVEL_EXCEPTION, @"%@", __EXCEPTION__); } while (0)
+#define _LOG_WARNING(...) NSLog(__VA_ARGS__)
+#define _LOG_ERROR(...) NSLog(__VA_ARGS__)
+#define _LOG_EXCEPTION(__EXCEPTION__)  NSLog(@"%@", __EXCEPTION__)
 
 #endif
 
 /**
- *  Consistency check macros used when building Debug only.
+ *  Consistency check macros.
  */
 
-#if !defined(_LOG_DEBUG_CHECK) || !defined(_LOG_DEBUG_UNREACHABLE)
-
-#if DEBUG
-
-#define _LOG_DEBUG_CHECK(__CONDITION__) \
-  do { \
-    if (!(__CONDITION__)) { \
-      abort(); \
-    } \
-  } while (0)
-#define _LOG_DEBUG_UNREACHABLE() abort()
-
-#else
-
-#define _LOG_DEBUG_CHECK(__CONDITION__)
-#define _LOG_DEBUG_UNREACHABLE()
-
+#if !defined(_LOG_CHECK)
+  #define _LOG_CHECK(__CONDITION__) \
+    do { \
+      if (!(__CONDITION__)) { \
+        abort(); \
+      } \
+    } while (0)
 #endif
 
+#if !defined(_LOG_DEBUG_CHECK)
+  #if DEBUG
+    #define _LOG_DEBUG_CHECK(__CONDITION__) _LOG_CHECK(__CONDITION__)
+  #else
+    #define _LOG_DEBUG_CHECK(__CONDITION__)
+  #endif
+#endif
+
+#if !defined(_LOG_UNREACHABLE)
+  #define _LOG_UNREACHABLE() abort()
+#endif
+
+#if !defined(_LOG_DEBUG_UNREACHABLE)
+  #if DEBUG
+    #define _LOG_DEBUG_UNREACHABLE() _LOG_UNREACHABLE()
+  #else
+    #define _LOG_DEBUG_UNREACHABLE()
+  #endif
 #endif
