@@ -32,6 +32,8 @@
 
 #import "GCDNetworking.h"
 
+#define kTestPort 3333
+
 typedef void (^TCPServerConnectionBlock)(GCDTCPPeerConnection* connection);
 
 @interface TCPServer : GCDTCPServer
@@ -64,12 +66,12 @@ typedef void (^TCPServerConnectionBlock)(GCDTCPPeerConnection* connection);
 
 - (void)testReading {
   __block GCDTCPPeerConnection* inConnection = nil;
-  TCPServer* server = [[TCPServer alloc] initWithPort:4444 connectionBlock:^(GCDTCPPeerConnection* connection) {
+  TCPServer* server = [[TCPServer alloc] initWithPort:kTestPort connectionBlock:^(GCDTCPPeerConnection* connection) {
     inConnection = connection;
   }];
   XCTAssertTrue([server start]);
   
-  GCDTCPClient* client = [[GCDTCPClient alloc] initWithConnectionClass:[GCDTCPClientConnection class] host:@"localhost" port:4444];
+  GCDTCPClient* client = [[GCDTCPClient alloc] initWithConnectionClass:[GCDTCPClientConnection class] host:@"localhost" port:kTestPort];
   XCTAssertTrue([client start]);
   
   sleep(1);
@@ -101,12 +103,12 @@ typedef void (^TCPServerConnectionBlock)(GCDTCPPeerConnection* connection);
 
 - (void)testWriting {
   __block GCDTCPPeerConnection* inConnection = nil;
-  TCPServer* server = [[TCPServer alloc] initWithPort:4444 connectionBlock:^(GCDTCPPeerConnection* connection) {
+  TCPServer* server = [[TCPServer alloc] initWithPort:kTestPort connectionBlock:^(GCDTCPPeerConnection* connection) {
     inConnection = connection;
   }];
   XCTAssertTrue([server start]);
   
-  GCDTCPClient* client = [[GCDTCPClient alloc] initWithConnectionClass:[GCDTCPClientConnection class] host:@"localhost" port:4444];
+  GCDTCPClient* client = [[GCDTCPClient alloc] initWithConnectionClass:[GCDTCPClientConnection class] host:@"localhost" port:kTestPort];
   XCTAssertTrue([client start]);
   
   sleep(1);
