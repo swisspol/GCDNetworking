@@ -196,17 +196,17 @@ static int _CreateConnectedSocket(NSString* hostname, NSUInteger port, const str
     [self _setSocketOption:SO_NOSIGPIPE withIntValue:1];  // Make sure this socket cannot generate SIG_PIPE when closed
     [self _setSocketOption:SO_KEEPALIVE withIntValue:1];  // Enable TCP keep-alive
     
-    struct sockaddr localSockAddr;
+    struct sockaddr_storage localSockAddr;
     socklen_t localAddrLen = sizeof(localSockAddr);
-    if (getsockname(_socket, &localSockAddr, &localAddrLen) == 0) {
+    if (getsockname(_socket, (struct sockaddr*)&localSockAddr, &localAddrLen) == 0) {
       _localAddressData = [[NSData alloc] initWithBytes:&localSockAddr length:localAddrLen];
     } else {
       _LOG_ERROR(@"Failed retrieving local socket address: %s", strerror(errno));
     }
     
-    struct sockaddr remoteSockAddr;
+    struct sockaddr_storage remoteSockAddr;
     socklen_t remoteAddrLen = sizeof(remoteSockAddr);
-    if (getpeername(_socket, &remoteSockAddr, &remoteAddrLen) == 0) {
+    if (getpeername(_socket, (struct sockaddr*)&remoteSockAddr, &remoteAddrLen) == 0) {
       _remoteAddressData = [[NSData alloc] initWithBytes:&remoteSockAddr length:remoteAddrLen];
     } else {
       _LOG_ERROR(@"Failed retrieving remote socket address: %s", strerror(errno));
