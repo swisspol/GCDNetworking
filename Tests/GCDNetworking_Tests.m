@@ -83,7 +83,7 @@ typedef void (^TCPServerConnectionBlock)(GCDTCPPeerConnection* connection);
   NSData* data1 = [inConnection readDataWithTimeout:3.0];
   XCTAssertNil(data1);
   
-  XCTestExpectation* expectation = [self expectationWithDescription:nil];
+  XCTestExpectation* expectation = [self expectationWithDescription:@""];
   [outConnection writeDataAsynchronously:[@"Hello World!\n" dataUsingEncoding:NSUTF8StringEncoding] completion:^(BOOL success) {
     XCTAssertTrue(success);
     [expectation fulfill];
@@ -117,7 +117,7 @@ typedef void (^TCPServerConnectionBlock)(GCDTCPPeerConnection* connection);
   GCDTCPClientConnection* outConnection = client.connection;
   XCTAssertNotNil(outConnection);
   
-  XCTestExpectation* expectation = [self expectationWithDescription:nil];
+  XCTestExpectation* expectation = [self expectationWithDescription:@""];
   [inConnection readDataAsynchronously:^(NSData* data) {
     XCTAssertNotNil(data);
     NSString* string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
